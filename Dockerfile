@@ -10,11 +10,11 @@ COPY go.* ./
 RUN go mod download
 
 # Copy the source code into the container.
-COPY ./cmd/apigateway/main.go ./cmd/apigateway/
+COPY ./cmd/employee-srv/main.go ./cmd/employee-srv/
 
 # Build the Go app.
 # Adjust the path to where your main.go is accordingly.
-RUN CGO_ENABLED=0 GOOS=linux go build -o /api-gateway ./cmd/apigateway/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o /employee-srv ./cmd/employee-srv/main.go
 
 # Start a new stage from scratch for a lean final image.
 FROM alpine:latest
@@ -22,10 +22,10 @@ FROM alpine:latest
 WORKDIR /
 
 # Copy the pre-built binary file from the previous stage.
-COPY --from=builder /api-gateway /api-gateway
+COPY --from=builder /employee-srv /employee-srv
 
 # Expose port 8080 to the outside world.
 EXPOSE 8080
 
 # Command to run the executable.
-CMD ["/api-gateway"]
+CMD ["/employee-srv"]
